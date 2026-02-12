@@ -1,0 +1,46 @@
+{
+  "name": "shotog",
+  "version": "0.1.0",
+  "description": "TypeScript SDK for ShotOG — generate beautiful OG images with one API call",
+  "type": "module",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts --clean",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "og-image",
+    "open-graph",
+    "social-media",
+    "screenshot",
+    "image-generation",
+    "api",
+    "cloudflare-workers",
+    "seo"
+  ],
+  "author": "nicepkg",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nicepkg/shotog.git",
+    "directory": "sdk"
+  },
+  "homepage": "https://github.com/nicepkg/shotog",
+  "devDependencies": {
+    "tsup": "^8.4.0",
+    "typescript": "^5.9.3"
+  }
+}

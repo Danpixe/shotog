@@ -72,7 +72,7 @@ export async function landingPage(c: Context<{ Bindings: Env }>) {
       <h1>ShotOG</h1>
       <p class="tagline">Screenshot & OG Images. One API Call.</p>
       <div class="hero-features">
-        <div class="feature"><span class="dot"></span> 3 Beautiful Templates</div>
+        <div class="feature"><span class="dot"></span> 8 Beautiful Templates</div>
         <div class="feature"><span class="dot"></span> Edge-Native (140ms)</div>
         <div class="feature"><span class="dot"></span> PNG & SVG Output</div>
         <div class="feature"><span class="dot"></span> 500 Free/month</div>
@@ -100,10 +100,10 @@ curl -X POST <span class="str">${baseUrl}/v1/og</span> \\
 
     <div class="section">
       <h2>Templates</h2>
-      <p>Choose from 3 built-in templates, each fully customizable:</p>
+      <p>Choose from 8 built-in templates, each fully customizable:</p>
       <div class="templates">
         <div class="template-card">
-          <img src="${baseUrl}/v1/og?title=Basic%20Template&subtitle=Clean%20%26%20versatile&template=basic&format=png" alt="Basic template" loading="lazy">
+          <img src="${baseUrl}/v1/og?title=Basic%20Template&subtitle=Clean%20%26%20versatile&template=basic" alt="Basic template" loading="lazy">
           <div class="name">basic</div>
         </div>
         <div class="template-card">
@@ -113,6 +113,26 @@ curl -X POST <span class="str">${baseUrl}/v1/og</span> \\
         <div class="template-card">
           <img src="${baseUrl}/v1/og?title=Product%20Template&subtitle=Bold%20%26%20professional&template=product&eyebrow=Launch" alt="Product template" loading="lazy">
           <div class="name">product</div>
+        </div>
+        <div class="template-card">
+          <img src="${baseUrl}/v1/og?title=Just%20Shipped%20v2.0&subtitle=Share%20your%20wins&template=social&eyebrow=Update&author=ShotOG" alt="Social template" loading="lazy">
+          <div class="name">social</div>
+        </div>
+        <div class="template-card">
+          <img src="${baseUrl}/v1/og?title=DevConf%202026&subtitle=The%20future%20of%20web&template=event&eyebrow=Conference&author=ShotOG" alt="Event template" loading="lazy">
+          <div class="name">event</div>
+        </div>
+        <div class="template-card">
+          <img src="${baseUrl}/v1/og?title=Version%203.0%20Released&subtitle=Performance%20%26%20new%20API&template=changelog&eyebrow=v3.0" alt="Changelog template" loading="lazy">
+          <div class="name">changelog</div>
+        </div>
+        <div class="template-card">
+          <img src="${baseUrl}/v1/og?title=This%20API%20saved%20us%2010%20hours%20a%20week&template=testimonial&author=Jane%20Doe&subtitle=CTO%20at%20Acme" alt="Testimonial template" loading="lazy">
+          <div class="name">testimonial</div>
+        </div>
+        <div class="template-card">
+          <img src="${baseUrl}/v1/og?title=Introducing%20ShotOG&subtitle=OG%20images%20in%20one%20API%20call&template=announcement&eyebrow=New" alt="Announcement template" loading="lazy">
+          <div class="name">announcement</div>
         </div>
       </div>
     </div>
@@ -126,6 +146,11 @@ curl -X POST <span class="str">${baseUrl}/v1/og</span> \\
           <option value="basic">basic</option>
           <option value="blog">blog</option>
           <option value="product">product</option>
+          <option value="social">social</option>
+          <option value="event">event</option>
+          <option value="changelog">changelog</option>
+          <option value="testimonial">testimonial</option>
+          <option value="announcement">announcement</option>
         </select>
         <label for="pg-title">Title *</label>
         <input id="pg-title" value="My Awesome Project" placeholder="Enter title...">
