@@ -1,11 +1,15 @@
 import type { OGImageParams } from "../types";
-import { getFonts } from "./fonts";
+import { getFonts, fetchCustomFont, type SatoriFont } from "./fonts";
 import { getTemplate } from "../templates";
 import { fetchImageAsDataUri } from "./image";
 
-export async function renderOGImage(params: OGImageParams): Promise<{
+export async function renderOGImage(
+  params: OGImageParams,
+  ctx?: ExecutionContext
+): Promise<{
   data: ArrayBuffer;
   contentType: string;
+  fontFallback: boolean;
   timings: { svgMs: number; pngMs: number; totalMs: number };
 }> {
   const start = Date.now();
@@ -21,13 +25,30 @@ export async function renderOGImage(params: OGImageParams): Promise<{
   params._avatarDataUri = avatarDataUri;
   params._logoDataUri = logoDataUri;
 
+  // Resolve fonts: custom URL if provided, otherwise Inter
+  let fonts: SatoriFont[] = getFonts();
+  let fontFallback = false;
+
+  if (params.fontUrl) {
+    try {
+      const customFonts = await fetchCustomFont(params.fontUrl, ctx);
+      if (customFonts && customFonts.length > 0) {
+        fonts = customFonts;
+      } else {
+        fontFallback = true;
+      }
+    } catch {
+      fontFallback = true;
+    }
+  }
+
   const satori = (await import("@cf-wasm/satori")).default;
   const template = getTemplate(params);
 
   const svg = await satori(template, {
     width,
     height,
-    fonts: getFonts(),
+    fonts,
   });
 
   const svgMs = Date.now() - start;
@@ -36,6 +57,7 @@ export async function renderOGImage(params: OGImageParams): Promise<{
     return {
       data: new TextEncoder().encode(svg).buffer as ArrayBuffer,
       contentType: "image/svg+xml",
+      fontFallback,
       timings: { svgMs, pngMs: 0, totalMs: svgMs },
     };
   }
@@ -50,6 +72,7 @@ export async function renderOGImage(params: OGImageParams): Promise<{
   return {
     data: pngBuffer.buffer as ArrayBuffer,
     contentType: "image/png",
+    fontFallback,
     timings: { svgMs, pngMs, totalMs: Date.now() - start },
   };
 }

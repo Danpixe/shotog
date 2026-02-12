@@ -29,6 +29,9 @@ export type OGImageParams = {
   bgColor?: string;
   textColor?: string;
   accentColor?: string;
+  font?: string;
+  /** URL to a custom .ttf or .otf font file (max 5MB, cached 1h) */
+  fontUrl?: string;
   format?: "png" | "svg";
   width?: number;
   height?: number;

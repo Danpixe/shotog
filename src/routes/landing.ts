@@ -75,6 +75,7 @@ export async function landingPage(c: Context<{ Bindings: Env }>) {
         <div class="feature"><span class="dot"></span> 8 Beautiful Templates</div>
         <div class="feature"><span class="dot"></span> Edge-Native (140ms)</div>
         <div class="feature"><span class="dot"></span> PNG & SVG Output</div>
+        <div class="feature"><span class="dot"></span> Custom Fonts</div>
         <div class="feature"><span class="dot"></span> 500 Free/month</div>
       </div>
     </header>
@@ -96,6 +97,19 @@ curl "<span class="str">${baseUrl}/v1/og?title=My%20Post&subtitle=A%20great%20re
 curl -X POST <span class="str">${baseUrl}/v1/og</span> \\
   -H <span class="str">"Content-Type: application/json"</span> \\
   -d <span class="str">'{"title":"Hello","template":"product","eyebrow":"NEW"}'</span></code></pre>
+    </div>
+
+    <div class="section">
+      <h2>Custom Fonts</h2>
+      <p>Use any TTF or OTF font by passing a URL. No upload needed — just point to your font file.</p>
+      <pre><code><span class="cmt"># Use a custom font via URL</span>
+curl "<span class="str">${baseUrl}/v1/og?title=Hello%20World&fontUrl=https://example.com/fonts/Poppins-Regular.ttf</span>"
+
+<span class="cmt"># Works with Google Fonts direct links, GitHub raw URLs, etc.</span>
+curl "<span class="str">${baseUrl}/v1/og?title=Hello&fontUrl=https://github.com/google/fonts/raw/main/ofl/poppins/Poppins-Regular.ttf</span>"
+
+<span class="cmt"># Graceful fallback: if the font URL fails, Inter is used automatically</span>
+<span class="cmt"># Check X-Font-Fallback: true header to detect fallback</span></code></pre>
     </div>
 
     <div class="section">
@@ -166,6 +180,8 @@ curl -X POST <span class="str">${baseUrl}/v1/og</span> \\
             <input id="pg-author" placeholder="e.g. Jane Doe">
           </div>
         </div>
+        <label for="pg-fonturl">Font URL</label>
+        <input id="pg-fonturl" placeholder="https://example.com/fonts/MyFont.ttf">
         <div class="row">
           <div>
             <label for="pg-bg">Background</label>
@@ -198,21 +214,25 @@ curl -X POST <span class="str">${baseUrl}/v1/og</span> \\
           <h3>Free</h3>
           <div class="price">$0<span>/mo</span></div>
           <div class="quota">500 images/month</div>
+          <div class="quota" style="margin-top:4px;font-size:12px;color:#64748b">Custom fonts via URL</div>
         </div>
         <div class="price-card popular">
           <h3>Starter</h3>
           <div class="price">$9<span>/mo</span></div>
           <div class="quota">5,000 images/month</div>
+          <div class="quota" style="margin-top:4px;font-size:12px;color:#64748b">Custom fonts via URL</div>
         </div>
         <div class="price-card">
           <h3>Pro</h3>
           <div class="price">$29<span>/mo</span></div>
           <div class="quota">20,000 images/month</div>
+          <div class="quota" style="margin-top:4px;font-size:12px;color:#64748b">Custom fonts via URL</div>
         </div>
         <div class="price-card">
           <h3>Scale</h3>
           <div class="price">$79<span>/mo</span></div>
           <div class="quota">100,000 images/month</div>
+          <div class="quota" style="margin-top:4px;font-size:12px;color:#64748b">Custom fonts via URL</div>
         </div>
       </div>
     </div>
@@ -246,7 +266,7 @@ curl -X POST <span class="str">${baseUrl}/v1/og</span> \\
 
       const fields = {
         template: 'pg-template', subtitle: 'pg-subtitle', eyebrow: 'pg-eyebrow',
-        author: 'pg-author', bgColor: 'pg-bg', accentColor: 'pg-accent', format: 'pg-format'
+        author: 'pg-author', fontUrl: 'pg-fonturl', bgColor: 'pg-bg', accentColor: 'pg-accent', format: 'pg-format'
       };
       for (const [key, id] of Object.entries(fields)) {
         const val = document.getElementById(id).value;

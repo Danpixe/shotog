@@ -8,7 +8,7 @@ import { listTemplates } from "../templates";
 const og = new Hono<{ Bindings: Env }>();
 
 /**
- * GET /v1/og — Generate OG image
+ * GET /v1/og -- Generate OG image
  *
  * Query params:
  *   template: basic|blog|product (default: basic)
@@ -17,6 +17,7 @@ const og = new Hono<{ Bindings: Env }>();
  *   eyebrow: string
  *   author: string
  *   domain: string
+ *   fontUrl: URL to a custom .ttf or .otf font file
  *   bgColor: hex color
  *   textColor: hex color
  *   accentColor: hex color
@@ -39,6 +40,8 @@ og.get("/", cacheMiddleware, authMiddleware, usageLimitMiddleware, async (c) => 
     avatar: c.req.query("avatar"),
     logo: c.req.query("logo"),
     domain: c.req.query("domain"),
+    font: c.req.query("font"),
+    fontUrl: c.req.query("fontUrl"),
     bgColor: c.req.query("bgColor"),
     textColor: c.req.query("textColor"),
     accentColor: c.req.query("accentColor"),
@@ -52,22 +55,26 @@ og.get("/", cacheMiddleware, authMiddleware, usageLimitMiddleware, async (c) => 
   params.height = Math.min(Math.max(params.height!, 200), 1260);
 
   try {
-    const result = await renderOGImage(params);
+    const apiKeyId = c.get("apiKeyId") as string;
+    const result = await renderOGImage(params, c.executionCtx);
 
     // Record usage (non-blocking)
-    const apiKeyId = c.get("apiKeyId") as string;
     c.executionCtx.waitUntil(recordUsage(c.env.DB, apiKeyId, false));
 
-    return new Response(result.data, {
-      headers: {
-        "Content-Type": result.contentType,
-        "Cache-Control": "public, max-age=86400",
-        "X-Render-Time-Ms": result.timings.totalMs.toString(),
-        "X-SVG-Time-Ms": result.timings.svgMs.toString(),
-        "X-PNG-Time-Ms": result.timings.pngMs.toString(),
-        "Access-Control-Allow-Origin": "*",
-      },
-    });
+    const headers: Record<string, string> = {
+      "Content-Type": result.contentType,
+      "Cache-Control": "public, max-age=86400",
+      "X-Render-Time-Ms": result.timings.totalMs.toString(),
+      "X-SVG-Time-Ms": result.timings.svgMs.toString(),
+      "X-PNG-Time-Ms": result.timings.pngMs.toString(),
+      "Access-Control-Allow-Origin": "*",
+    };
+
+    if (result.fontFallback) {
+      headers["X-Font-Fallback"] = "true";
+    }
+
+    return new Response(result.data, { headers });
   } catch (error: any) {
     return c.json(
       { error: "Image generation failed", message: error.message },
@@ -77,7 +84,7 @@ og.get("/", cacheMiddleware, authMiddleware, usageLimitMiddleware, async (c) => 
 });
 
 /**
- * POST /v1/og — Generate OG image from JSON body
+ * POST /v1/og -- Generate OG image from JSON body
  * Same params as GET, but in request body.
  */
 og.post("/", authMiddleware, usageLimitMiddleware, async (c) => {
@@ -96,6 +103,8 @@ og.post("/", authMiddleware, usageLimitMiddleware, async (c) => {
     avatar: body.avatar,
     logo: body.logo,
     domain: body.domain,
+    font: body.font,
+    fontUrl: body.fontUrl,
     bgColor: body.bgColor,
     textColor: body.textColor,
     accentColor: body.accentColor,
@@ -105,19 +114,23 @@ og.post("/", authMiddleware, usageLimitMiddleware, async (c) => {
   };
 
   try {
-    const result = await renderOGImage(params);
-
     const apiKeyId = c.get("apiKeyId") as string;
+    const result = await renderOGImage(params, c.executionCtx);
+
     c.executionCtx.waitUntil(recordUsage(c.env.DB, apiKeyId, false));
 
-    return new Response(result.data, {
-      headers: {
-        "Content-Type": result.contentType,
-        "Cache-Control": "public, max-age=86400",
-        "X-Render-Time-Ms": result.timings.totalMs.toString(),
-        "Access-Control-Allow-Origin": "*",
-      },
-    });
+    const headers: Record<string, string> = {
+      "Content-Type": result.contentType,
+      "Cache-Control": "public, max-age=86400",
+      "X-Render-Time-Ms": result.timings.totalMs.toString(),
+      "Access-Control-Allow-Origin": "*",
+    };
+
+    if (result.fontFallback) {
+      headers["X-Font-Fallback"] = "true";
+    }
+
+    return new Response(result.data, { headers });
   } catch (error: any) {
     return c.json(
       { error: "Image generation failed", message: error.message },
@@ -127,7 +140,7 @@ og.post("/", authMiddleware, usageLimitMiddleware, async (c) => {
 });
 
 /**
- * GET /v1/og/templates — List available templates
+ * GET /v1/og/templates -- List available templates
  */
 og.get("/templates", (c) => {
   return c.json({
